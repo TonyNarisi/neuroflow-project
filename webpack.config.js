@@ -39,3 +39,5 @@ const config = {
 		contentBase: BUILD_DIR
 	}
 }
+
+module.exports = config;
