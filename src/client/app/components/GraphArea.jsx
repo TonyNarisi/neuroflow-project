@@ -1,30 +1,28 @@
 import React, { Component } from 'react';
-import futureStress from '../data/future_stress.json';
-import mood from '../data/mood.json';
-import rumination from '../data/rumination.json';
-import sleep from '../data/sleep.json';
+import Graph from '../containers/Graph';
 
-class GraphArea extends Component {
-	constructor() {
-		super();
-
-		this.state = {
-			userData: {
-				future_stress: futureStress,
-				mood: mood,
-				rumination: rumination,
-				sleep: sleep
-			}
-		}
-	}
-
-	render() {
-		return(
-			<div>
-				GraphArea
-			</div>
-		)
-	}
-}
+const GraphArea = (props) => (
+	<div>
+		{ props.userData.map(dataGroup => {
+			let isActive = props.metricsSelected.indexOf(dataGroup.category) > -1;
+			return(
+				<div
+					key={ dataGroup.category }
+					className={ `graph-${ !isActive ? 'in': '' }active row-wrapper` }>
+					<div className="row small-row-padding max-width narrow-column">
+						<div className='data-holder'>
+							<Graph 
+								category={ dataGroup.category }
+								data={ dataGroup.data }
+								type={ props.graphTypeSelected } />
+						</div>
+					</div>
+				</div>
+			)
+		})}
+		<div>
+		</div>
+	</div>
+)
 
 export default GraphArea;

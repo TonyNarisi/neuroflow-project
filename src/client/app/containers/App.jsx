@@ -1,8 +1,12 @@
 import React, { Component } from 'react';
-// import MetricSelectors from '../containers/MetricSelectors';
-// import GraphTypeSelectors from '../containers/GraphTypeSelectors';
+import futureStress from '../data/future_stress.json';
+import mood from '../data/mood.json';
+import rumination from '../data/rumination.json';
+import sleep from '../data/sleep.json';
 import GraphArea from '../components/GraphArea';
 import Selectors from '../components/Selectors';
+import GraphTypeSwitch from '../components/GraphTypeSwitch';
+import TimeFilterSelector from '../components/TimeFilterSelector';
 
 class App extends Component {
 	constructor() {
@@ -21,16 +25,58 @@ class App extends Component {
 				'rumination',
 				'sleep'
 			],
-			graphTypesSelected: [
-				'standard_line'
-			],
+			graphTypeSelected: 'scatterplot',
 			potentialGraphTypes: [
-				'standard_line',
-				'linear_regression'
+				'line',
+				'scatterplot'
+			],
+			timeFilter: 'all',
+			potentialTimeFilters: ['all'],
+			userData: [
+				{
+					category: 'future_stress',
+					data: futureStress
+				},
+				{
+					category: 'mood',
+					data: mood
+				},
+				{
+					category: 'rumination',
+					data: rumination
+				},
+				{
+					category: 'sleep',
+					data: sleep
+				}
 			]
 		}
 
 		this.changeSelected = this.changeSelected.bind(this);
+		this.switchGraphType = this.switchGraphType.bind(this);
+		this.findTimeFilters = this.findTimeFilters.bind(this);
+		this.switchTimeFilter = this.switchTimeFilter.bind(this);
+	}
+
+	componentWillMount() {
+		this.findTimeFilters();
+	}
+
+	findTimeFilters() {
+		// We use future stress as an example, but in production this would need to account for discrepancies between the two
+		let months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+		let uniqueMonths = ['all'];
+		for (let stressNum = futureStress.length, i = 0; i < stressNum; i++) {
+			let monthNum = new Date(parseInt(futureStress[i].timestamp)).getMonth();
+			let month = months[monthNum];
+			if (uniqueMonths.indexOf(month) === -1) {
+				uniqueMonths.push(month);
+			}
+		}
+
+		this.setState({
+			potentialTimeFilters: uniqueMonths
+		})
 	}
 
 	changeSelected(category, choice) {
@@ -48,6 +94,18 @@ class App extends Component {
 		})
 	}
 
+	switchGraphType(choice) {
+		this.setState({
+			graphTypeSelected: choice
+		})
+	}
+
+	switchTimeFilter(choice) {
+		this.setState({
+			timeFilter: choice
+		})
+	}
+
 	render() {
 		let state = this.state;
 		return(
@@ -57,14 +115,19 @@ class App extends Component {
 					potentials={ state.potentialMetrics }
 					selected={ state.metricsSelected }
 					changeSelected={ this.changeSelected } />
-				<Selectors 
+				<GraphTypeSwitch
 					category='graphTypes'
 					potentials={ state.potentialGraphTypes }
-					selected={ state.graphTypesSelected }
-					changeSelected={ this.changeSelected } />
+					selected={ state.graphTypeSelected }
+					changeSelected={ this.switchGraphType } />
+				<TimeFilterSelector 
+					potentials={ state.potentialTimeFilters }
+					selected={ state.timeFilter }
+					changeSelected={ this.switchTimeFilter } />
 				<GraphArea
 					metricsSelected={ state.metricsSelected }
-					graphTypesSelected={ state.graphTypesSelected } />
+					graphTypeSelected={ state.graphTypeSelected }
+					userData={ state.userData } />
 			</div>
 		)
 	}	

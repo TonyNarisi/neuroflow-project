@@ -1,0 +1,77 @@
+// Fonts
+html, body {
+  font-family: 'Lato', sans-serif;
+  color: #333;
+}
+body {
+  padding-bottom: 3.75rem;
+  overflow-x: hidden;
+}
+* {
+  box-sizing: border-box;
+}
+h1 {
+  font-size: 3em;
+}
+h2 {
+  font-size: 1.5em;
+  margin-top: 0;
+}
+.text-center {
+	text-align: center;
+}
+
+// Graphs
+.graph-inactive {
+	display: none;
+	visibility: hidden;
+}
+.data-holder path {
+  fill: none;
+  stroke-width: 1px;
+}
+.data-holder text {
+	font-size: 14px;
+}
+.data-holder .tick text {
+	font-size: 10px;
+}
+.future_stress-regression,
+.future_stress-line {
+	stroke: blue;
+}
+.mood-regression,
+.mood-line {
+	stroke: red;
+}
+.rumination-regression,
+.rumination-line {
+	stroke: green;
+}
+.sleep-regression,
+.sleep-line {
+	stroke: gray;
+}
+.future_stress-point {
+	fill: blue;
+}
+.mood-point {
+	fill: red;
+}
+.rumination-point {
+	fill: green;
+}
+.sleep-point {
+	fill: gray;
+}
+.regression {
+	stroke-dasharray: 3;
+}
+.scatterplot-graph .standard-line {
+	display: none;
+	visibility: hidden;
+}
+.line-graph .regression {
+	display: none;
+	visibility: hidden;
+}
