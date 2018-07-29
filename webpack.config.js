@@ -24,7 +24,7 @@ const config = {
 				loader: 'style-loader!css-loader!sass-loader'
 			},
 			{
-				test: /.jsx?/,
+				test: /.jsx?$/,
 				include: APP_DIR,
 				loader: 'babel-loader'
 			}
