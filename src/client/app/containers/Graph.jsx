@@ -18,7 +18,8 @@ class Graph extends Component {
 				bottom: 60,
 				left: 40,
 				right: 10
-			}
+			},
+			notEnoughData: false
 		}
 
 		this.filterDataByTime = this.filterDataByTime.bind(this);
@@ -45,13 +46,17 @@ class Graph extends Component {
 
 		if (props.timeFilter != nextProps.timeFilter) {
 			if (nextProps.timeFilter != 'all') {
-				let filteredData = this.filterDataByTime(nextProps.data, nextProps.timeFilter);
-				this.clearGraph();
-				this.initGraph(filteredData);
+				var data = this.filterDataByTime(nextProps.data, nextProps.timeFilter);
 			} else {
-				this.clearGraph();
-				this.initGraph(nextProps.data);
+				var data = nextProps.data;
 			}
+
+			this.setState({
+				notEnoughData: data.length <= 1
+			})
+
+			this.clearGraph();
+			this.initGraph(data);
 		}
 	}
 
@@ -241,13 +246,16 @@ class Graph extends Component {
 		let props = this.props;
 		let state = this.state;
 		return(
-			<div>
+			<div className={ `${ state.notEnoughData ? 'not-enough-data__wrap' : '' }` }>
 				<h2 className="text-center">{ prettyPrint(props.category) }</h2>
+				<div className="not-enough-data__message">
+					<h4 className="text-center">Sorry, there is not enough data (1 or fewer points) for this metric in the selected timeframe to generate a line graph or regression line.</h4>
+				</div>
 				<svg
 					id={ `${ props.category }-line` }
 					width={ state.width }
 					height={ state.height }
-					className={ `${ props.type}-graph` }>
+					className={ `${ props.type}-graph graph` }>
 				</svg>
 			</div>
 		)
