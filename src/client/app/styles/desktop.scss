@@ -20,6 +20,32 @@ h2 {
 .text-center {
 	text-align: center;
 }
+.center-self {
+	margin-left: auto;
+	margin-right: auto;
+	display: block;
+}
+.theme-button {
+  padding: 0.625rem 1.25rem;
+  border: 2px solid #5cdb95;
+  color: #fff;
+  background-color: #05386b;
+  cursor: pointer;
+  font-size: 1.125rem;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  @include transition(background-color 0.4s ease)
+  &.inactive {
+    background-color: #999;
+    border-color: #666;
+    &:hover {
+      background-color: #999;
+    }
+  }
+  &:hover {
+    background-color: #379683;
+  }
+}
 
 // Not Enough Data
 .not-enough-data__message {
