@@ -67,10 +67,12 @@ class App extends Component {
 		let months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 		let uniqueMonths = ['all'];
 		for (let stressNum = futureStress.length, i = 0; i < stressNum; i++) {
-			let monthNum = new Date(parseInt(futureStress[i].timestamp)).getMonth();
+			let date = new Date(parseInt(futureStress[i].timestamp));
+			let monthNum = date.getMonth();
 			let month = months[monthNum];
-			if (uniqueMonths.indexOf(month) === -1) {
-				uniqueMonths.push(month);
+			let year = date.getFullYear();
+			if (uniqueMonths.indexOf(`${ month }-${ year }`) === -1) {
+				uniqueMonths.push(`${ month }-${ year }`);
 			}
 		}
 
@@ -127,6 +129,7 @@ class App extends Component {
 				<GraphArea
 					metricsSelected={ state.metricsSelected }
 					graphTypeSelected={ state.graphTypeSelected }
+					timeFilter={ state.timeFilter }
 					userData={ state.userData } />
 			</div>
 		)

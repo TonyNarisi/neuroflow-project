@@ -12,6 +12,7 @@ const GraphArea = (props) => (
 					<div className="row small-row-padding max-width narrow-column">
 						<div className='data-holder'>
 							<Graph 
+								timeFilter={ props.timeFilter }
 								category={ dataGroup.category }
 								data={ dataGroup.data }
 								type={ props.graphTypeSelected } />
