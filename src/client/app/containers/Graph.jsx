@@ -21,14 +21,56 @@ class Graph extends Component {
 			}
 		}
 
+		this.filterDataByTime = this.filterDataByTime.bind(this);
 		this.addLineGraph = this.addLineGraph.bind(this);
 		this.addRegressionLine = this.addRegressionLine.bind(this);
 		this.findRegressionData = this.findRegressionData.bind(this);
+		this.clearGraph = this.clearGraph.bind(this);
 		this.initGraph = this.initGraph.bind(this);
 	}
 
 	componentDidMount() {
-		this.initGraph();
+		let props = this.props;
+
+		if (props.timeFilter != 'all') {
+			let filteredData = this.filterDataByTime(props.data, props.timeFilter);
+			this.initGraph(filteredData);
+		} else {
+			this.initGraph(props.data);
+		}
+	}
+
+	componentWillReceiveProps(nextProps) {
+		let props = this.props;
+
+		if (props.timeFilter != nextProps.timeFilter) {
+			if (nextProps.timeFilter != 'all') {
+				let filteredData = this.filterDataByTime(nextProps.data, nextProps.timeFilter);
+				this.clearGraph();
+				this.initGraph(filteredData);
+			} else {
+				this.clearGraph();
+				this.initGraph(nextProps.data);
+			}
+		}
+	}
+
+	determineIfInFilter(timestamp, filter) {
+		let date = new Date(timestamp);
+		let months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+		let thisMonth = months[date.getMonth()];
+		let thisYear = date.getFullYear();
+
+		return `${ thisMonth }-${ thisYear }` === filter;
+	}
+
+	filterDataByTime(data, filter) {
+		// Create deep clone
+		let dataClone = JSON.parse(JSON.stringify(data));
+		let dataFiltered = data.filter(elm => {
+			return this.determineIfInFilter(parseInt(elm.timestamp), filter);
+		})
+		return dataFiltered;
 	}
 
 	formatTime(timestamp) {
@@ -145,7 +187,13 @@ class Graph extends Component {
 		return regressionData;
 	}
 
-	initGraph() {
+	clearGraph() {
+		let props = this.props;
+		let target = document.getElementById(`${ props.category }-line`);
+		target.innerHTML = '';
+	}
+
+	initGraph(dataToUse) {
 		let props = this.props;
 		let state = this.state;
 		let margin = state.margin;
@@ -155,7 +203,7 @@ class Graph extends Component {
 
 		// First, format the time from the data into something that D3 can read, as a day
 		// Then, use the day format to filter only unique values
-		let data = props.data.map(elm => {
+		let data = dataToUse.map(elm => {
 			return {
 				rating: parseInt(elm.rating),
 				origTimestamp: parseInt(elm.timestamp),
@@ -182,7 +230,7 @@ class Graph extends Component {
 		let group = target.append('g')
 	    .attr('transform', `translate(${ margin.left },${ margin.top })`);
 
-		this.addLineGraph(group, data, line)
+		this.addLineGraph(group, data, line);
 		this.addRegressionLine(group, regressionData, line);
 		this.addScatterPlotPoints(group, data, x, y);
 		this.addLeftAxis(group, y);
