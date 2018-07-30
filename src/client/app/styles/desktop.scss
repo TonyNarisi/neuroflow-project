@@ -21,6 +21,22 @@ h2 {
 	text-align: center;
 }
 
+// Not Enough Data
+.not-enough-data__message {
+	display: none;
+	visibility: hidden;
+}
+.not-enough-data__wrap {
+	.not-enough-data__message {
+		display: block;
+		visibility: visible;
+	}
+	.graph {
+		display: none;
+		visibility: hidden;
+	}
+}
+
 // Graphs
 .graph-inactive {
 	display: none;
